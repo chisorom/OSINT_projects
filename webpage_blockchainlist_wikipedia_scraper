@@ -1,7 +1,10 @@
-###Web scraping project on a static Wikipedia page 
+# Web scraping project on a static Wikipedia page 
 
-##This webpage was chosen in order to gain insights on trends in the blockchain space. This is also useful for researchers who would like to track changes or updates on new blockchains
-### This Python scraper code was executed in the Jupyter Notebook environment 
+This webpage was chosen in order to gain insights on trends in the blockchain space. This is also useful for researchers who would like to track changes or updates on new blockchains,<br />
+This Python scraper code was executed in the Jupyter Notebook environment<br />
+
+
+
 
 
 
