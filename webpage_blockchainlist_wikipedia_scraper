@@ -1,7 +1,85 @@
 # Web scraping project on a static Wikipedia page 
 
-This webpage was chosen in order to gain insights on trends in the blockchain space. This is also useful for researchers who would like to track changes or updates on new blockchains,<br />
-This Python scraper code was executed in the Jupyter Notebook environment<br />
+This webpage was chosen to gain insights on trends in the blockchain space. This is also useful for researchers who would like to track changes or updates on new blockchains
+This Python scraper code was executed in the Jupyter Notebook environment
+
+
+
+
+## START OF SCRIPT
+
+
+from bs4 import BeautifulSoup
+import requests 
+
+url = 'https://en.wikipedia.org/wiki/List_of_blockchains'
+page = requests.get(url)
+soup = BeautifulSoup(page.text, 'html')
+
+print(soup)
+soup.find('table')
+soup.find_all('table')[1]
+
+soup.find('table', class_ = 'wikitable sortable')
+#table class="wikitable sortable jquery-tablesorter">
+#<caption>
+
+table = soup.find_all('table')[1]    
+print(table)
+
+
+soup.find_all('th')
+
+block_titles = table.find_all ('th')
+print (block_titles)
+
+
+block_table_titles = [title.text.strip() for title in block_titles]
+print(block_table_titles)
+
+#I want to replace some column titles in the list 
+block_table_titles = [block_table_title.replace('Refs.', ' ') for block_table_title in block_table_titles] 
+block_table_titles = [block_table_title.replace('Private?[Note 1]', 'Private?') for block_table_title in block_table_titles] 
+block_table_titles = [block_table_title.replace('Permissioned?[Note 1]', 'Permissioned?') for block_table_title in block_table_titles] 
+#I also need to remove the links which i will do later on in data cleaning
+print(block_table_titles)
+
+
+
+#next, we put the titles into our pandas dataframe 
+import pandas as pd
+df = pd.DataFrame(columns = block_table_titles)
+df
+
+column_data = table.find_all('tr')
+
+
+
+for row in column_data [1:]: #removed first empty bracket
+   row_data = row.find_all('td')
+   # Extract text from each table cell (td) instead of using raw Tag objects
+
+   new_row_data = [td.get_text(strip=True) for td in column_data] #this extracts the text from each cell and shows it as text not a Beatysoup tag
+   print(new_row_data)  
+
+   individual_row_data = [data.get_text(strip=True) for data in row_data] #removing this shows error "cannot set rows with mismatched column, putting it back solves issue
+   print(individual_row_data)
+
+  #we cannot stuff everything into our data frame at once. So let's put it in one at a time. We will use Location in pandas
+
+   length = len(df) #looking at length of current df. which is empty right now 
+   df.loc[length] = individual_row_data   #we are looping through ird and appending each row of info into next loc
+ 
+
+df
+
+
+
+# We have now scraped successfully!!! we can export to a CSV
+df.to_csv (r'C:\Users\chiso\Downloads\MYSQL\block_scraped.csv', index= False)
+
+
+
 
 
 
